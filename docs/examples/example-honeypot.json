@@ -1,0 +1,273 @@
+{
+  "report_id": "example-honeypot",
+  "generated_at": "2026-11-10T03:17:41.576598Z",
+  "disclaimer": "This report represents automated security analysis and simulation results. It is not a formal smart contract audit or a guarantee of token safety. A low score does not mean the token is safe.",
+  "result": {
+    "analysis_id": "example-honeypot",
+    "chain_id": 31337,
+    "token_address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    "status": "completed",
+    "analysis_depth": "standard",
+    "block_number": 8,
+    "started_at": null,
+    "finished_at": null,
+    "duration_ms": 1234.5,
+    "token": {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "chain_id": 31337,
+      "chain_name": "Local Anvil (mock DEX)",
+      "is_contract": true,
+      "bytecode_size": 2522,
+      "metadata": {
+        "name": "Honeypot Token",
+        "symbol": "HNY",
+        "decimals": 18,
+        "total_supply": 1000000000000000000000000,
+        "metadata_complete": true,
+        "errors": []
+      },
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "ownership_renounced": null,
+      "is_verified": null,
+      "verification_source": null,
+      "proxy": {
+        "is_proxy": false,
+        "proxy_type": null,
+        "implementation": null,
+        "admin": null,
+        "beacon": null,
+        "detection_methods": []
+      },
+      "contract_type": "ownable_erc20",
+      "erc20_compliant": true,
+      "detected_functions": {
+        "name()": true,
+        "symbol()": true,
+        "decimals()": true,
+        "totalSupply()": true,
+        "balanceOf(address)": true,
+        "transfer(address,uint256)": true,
+        "transferFrom(address,address,uint256)": true,
+        "approve(address,uint256)": true,
+        "allowance(address,address)": true,
+        "owner()": true,
+        "renounceOwnership()": true,
+        "transferOwnership(address)": true,
+        "getOwner()": false,
+        "hasRole(bytes32,address)": false,
+        "getRoleAdmin(bytes32)": false,
+        "mint(address,uint256)": false,
+        "mint(uint256)": false,
+        "burn(uint256)": false,
+        "burnFrom(address,uint256)": false,
+        "pause()": false,
+        "unpause()": false,
+        "paused()": false,
+        "enableTrading()": true,
+        "disableTrading()": false,
+        "blacklist(address,bool)": false,
+        "addBlackList(address)": false,
+        "removeBlackList(address)": false,
+        "setBlacklist(address,bool)": false,
+        "setWhitelist(address,bool)": false,
+        "setTaxes(uint256,uint256)": false,
+        "setBuyTax(uint256)": false,
+        "setSellTax(uint256)": false,
+        "setFees(uint256,uint256)": false,
+        "upgradeTo(address)": false,
+        "upgradeToAndCall(address,bytes)": false,
+        "implementation()": false,
+        "withdraw()": false,
+        "withdrawETH()": false,
+        "withdrawToken(address)": false
+      },
+      "pairs": [],
+      "creation_block": null,
+      "notes": []
+    },
+    "findings": [
+      {
+        "id": "owner.enableTrading_transfer_restriction",
+        "title": "Trading can be gated by the owner",
+        "category": "transfer_restriction",
+        "severity": "medium",
+        "confidence": "suspicious",
+        "source": "source_code",
+        "description": "Trading must be enabled by the owner; until then transfers revert. Evidence: verified source contains the relevant logic; function selector present in bytecode.",
+        "evidence": {
+          "selector": "enableTrading()",
+          "selector_present": true,
+          "source_match": true
+        },
+        "impact": "Owner never enables trading or re-disables it to trap buyers.",
+        "recommendation": "Confirm trading cannot be disabled after launch.",
+        "references": [
+          "enableTrading()"
+        ],
+        "metadata": {}
+      },
+      {
+        "id": "owner.transferOwnership_ownership",
+        "title": "Ownership is transferable",
+        "category": "ownership",
+        "severity": "low",
+        "confidence": "suspicious",
+        "source": "source_code",
+        "description": "Ownership can be handed to any address, including an unverified one. Evidence: verified source contains the relevant logic; function selector present in bytecode.",
+        "evidence": {
+          "selector": "transferOwnership(address)",
+          "selector_present": true,
+          "source_match": true
+        },
+        "impact": "Ownership is moved to a contract that re-enables malicious powers.",
+        "recommendation": "Track the ownership target.",
+        "references": [
+          "transferOwnership(address)"
+        ],
+        "metadata": {}
+      },
+      {
+        "id": "honeypot.cannot_sell",
+        "title": "Token can be bought but cannot be sold",
+        "category": "honeypot",
+        "severity": "critical",
+        "confidence": "confirmed",
+        "source": "simulation",
+        "description": "An on-fork buy succeeded but every sell attempt reverted. This is the defining honeypot behaviour: buyers are trapped.",
+        "evidence": {
+          "fork_block": 8,
+          "sell_revert": "execution reverted: Sell not allowed', '0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001053656c6c206e6f7420616c6c6f77656400000000000000000000000000000000')",
+          "scenarios": 1
+        },
+        "impact": "Holders cannot exit; funds are effectively locked.",
+        "recommendation": "Do not buy this token.",
+        "references": [],
+        "metadata": {}
+      },
+      {
+        "id": "honeypot.whitelist_capability",
+        "title": "Whitelist / privileged exemptions detected",
+        "category": "whitelist",
+        "severity": "medium",
+        "confidence": "suspicious",
+        "source": "source_code",
+        "description": "Transfer logic references whitelisting or privileged exemptions. Whitelist-only selling is a common honeypot pattern.",
+        "evidence": {
+          "source_hint": true
+        },
+        "impact": "Only privileged wallets may be able to sell.",
+        "recommendation": null,
+        "references": [],
+        "metadata": {}
+      },
+      {
+        "id": "honeypot.trading_gate",
+        "title": "Owner-controlled trading gate",
+        "category": "transfer_restriction",
+        "severity": "medium",
+        "confidence": "suspicious",
+        "source": "bytecode",
+        "description": "Trading appears gated by an owner-controlled switch. This is often used by legitimate launches (anti-bot) but also by honeypots.",
+        "evidence": {
+          "selector_enableTrading": true
+        },
+        "impact": null,
+        "recommendation": null,
+        "references": [],
+        "metadata": {}
+      }
+    ],
+    "risk": {
+      "score": 72,
+      "classification": "High risk",
+      "explanation": [
+        "+60 pts [critical/confirmed/simulation] Token can be bought but cannot be sold",
+        "+5.04 pts [medium/suspicious/source_code] Trading can be gated by the owner",
+        "+5.04 pts [medium/suspicious/source_code] Whitelist / privileged exemptions detected",
+        "+2.1 pts [low/suspicious/source_code] Ownership is transferable",
+        "Findings are de-duplicated by category; the strongest finding per category is scored."
+      ],
+      "contributing_findings": [
+        "honeypot.cannot_sell",
+        "owner.enableTrading_transfer_restriction",
+        "honeypot.whitelist_capability",
+        "owner.transferOwnership_ownership"
+      ],
+      "uncertainties": [
+        "Example: bytecode selectors are heuristic."
+      ],
+      "disclaimer": "This report represents automated security analysis and simulation results. It is not a formal smart contract audit or a guarantee of token safety. A low score does not mean the token is safe."
+    },
+    "simulation": {
+      "performed": true,
+      "reason": null,
+      "fork_block": 8,
+      "chain_id": 31337,
+      "token_address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "pair": {
+        "address": "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
+        "dex": "Mock Uniswap V2",
+        "reserve_token": 100000000000000000000000,
+        "reserve_native_wei": 100000000000000000000
+      },
+      "router": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "factory": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "scenarios": [
+        {
+          "name": "medium",
+          "wallet": "0x000000000000000000000000000000000000bEEF",
+          "fork_block": 8,
+          "buy_amount_wei": 100000000000000000,
+          "expected_tokens_out": 99600698103990321649,
+          "tokens_received": 99600698103990321649,
+          "buy_tax_bps": 0.0,
+          "buy_result": {
+            "success": true,
+            "gas_used": 116471,
+            "error": null,
+            "revert_reason": null,
+            "tx_hash": "26f241cdb4be1f12a67dcf658cc194aab08d2b136308bf81712460a3908cd040",
+            "decoded_log_count": 4
+          },
+          "sell_amount_tokens": 99600698103990321649,
+          "expected_native_out": 99401494919436625,
+          "native_received_wei": 0,
+          "sell_tax_bps": null,
+          "sell_result": {
+            "success": false,
+            "gas_used": null,
+            "error": "execution reverted: Sell not allowed', '0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001053656c6c206e6f7420616c6c6f77656400000000000000000000000000000000')",
+            "revert_reason": "execution reverted: Sell not allowed', '0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001053656c6c206e6f7420616c6c6f77656400000000000000000000000000000000')",
+            "tx_hash": null,
+            "decoded_log_count": 0
+          },
+          "gas_price_wei": null,
+          "notes": []
+        }
+      ],
+      "buy_success_any": true,
+      "sell_success_any": false,
+      "buy_tax_bps": 0.0,
+      "sell_tax_bps": null,
+      "can_buy_cannot_sell": true,
+      "limitations": [
+        "Example generated against a local mock DEX with the Foundry fixtures."
+      ]
+    },
+    "tax": {
+      "buy_tax_bps": 0.0,
+      "sell_tax_bps": null,
+      "dynamic": false,
+      "inconclusive": false,
+      "samples": {
+        "buy": [
+          0.0
+        ],
+        "sell": []
+      }
+    },
+    "owner_analysis": null,
+    "warnings": [],
+    "error": null
+  }
+}

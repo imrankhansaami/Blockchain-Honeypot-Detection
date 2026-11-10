@@ -1,0 +1,47 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+frontend/.env.local
+
+# --- Foundry ---
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+contracts/lib/
+!contracts/lib/.gitkeep
+
+# --- Environment / secrets ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# --- Reports / runtime data ---
+reports/generated/
+data/
+*.sqlite3
+*.db
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

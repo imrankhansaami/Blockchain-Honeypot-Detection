@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Security Report - HNY</title>
+<style>
+  :root { --bg:#0b0f17; --card:#121826; --fg:#e6edf7; --muted:#8b97ab; --border:#1f2937;
+          --crit:#f43f5e; --high:#fb923c; --med:#facc15; --low:#38bdf8; --info:#64748b; --ok:#34d399; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; line-height:1.5; }
+  .wrap { max-width:960px; margin:0 auto; padding:32px 20px 80px; }
+  h1,h2,h3 { line-height:1.2; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin:16px 0; }
+  .muted { color:var(--muted); }
+  .badge { display:inline-block; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:600; }
+  .crit { background:rgba(244,63,94,.15); color:var(--crit); }
+  .high { background:rgba(251,146,60,.15); color:var(--high); }
+  .medium { background:rgba(250,204,21,.15); color:var(--med); }
+  .low { background:rgba(56,189,248,.15); color:var(--low); }
+  .informational { background:rgba(100,116,139,.2); color:var(--info); }
+  table { width:100%; border-collapse:collapse; }
+  th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); font-size:14px; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  .score { font-size:56px; font-weight:800; }
+  .kv td:first-child { color:var(--muted); width:220px; }
+  code { background:#0e1420; padding:1px 6px; border-radius:6px; font-size:13px; }
+  pre { background:#0e1420; border:1px solid var(--border); border-radius:8px; padding:12px; overflow-x:auto; font-size:12px; }
+  .finding { border-left:3px solid var(--border); padding-left:14px; margin:14px 0; }
+  .finding.critical { border-color:var(--crit); }
+  .finding.high { border-color:var(--high); }
+  .finding.medium { border-color:var(--med); }
+  .finding.low { border-color:var(--low); }
+  .finding.informational { border-color:var(--info); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Security Report - HNY</h1>
+  <p class="muted">Generated 2026-11-10 03:17:41.576598+00:00 &middot; Report ID <code>example-honeypot</code></p>
+
+  <div class="card">
+    <h2>Overall risk</h2>
+    <div class="score">72<span class="muted" style="font-size:20px">/100</span></div>
+    <p><span class="badge high">High risk</span></p>
+    
+    <h3>How the score was calculated</h3>
+    <ul><li>+60 pts [critical/confirmed/simulation] Token can be bought but cannot be sold</li><li>+5.04 pts [medium/suspicious/source_code] Trading can be gated by the owner</li><li>+5.04 pts [medium/suspicious/source_code] Whitelist / privileged exemptions detected</li><li>+2.1 pts [low/suspicious/source_code] Ownership is transferable</li><li>Findings are de-duplicated by category; the strongest finding per category is scored.</li></ul>
+    
+  </div>
+
+  <div class="card">
+    <h2>Token information</h2>
+    <table class="kv">
+      <tr><td>Name</td><td>Honeypot Token</td></tr>
+      <tr><td>Symbol</td><td>HNY</td></tr>
+      <tr><td>Address</td><td><code>0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9</code></td></tr>
+      <tr><td>Chain</td><td>Local Anvil (mock DEX) (chain id 31337)</td></tr>
+      <tr><td>Decimals</td><td>18</td></tr>
+      <tr><td>Total supply</td><td>1000000000000000000000000</td></tr>
+      <tr><td>Owner</td><td><code>0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</code></td></tr>
+      <tr><td>Contract type</td><td>ownable_erc20</td></tr>
+      <tr><td>Proxy</td><td>No</td></tr>
+      <tr><td>Verified source</td><td>None</td></tr>
+      <tr><td>Analysis block</td><td>8</td></tr>
+      <tr><td>Analysis timestamp</td><td>2026-11-10 03:17:41.576598+00:00</td></tr>
+    </table>
+  </div>
+
+  
+  <div class="card">
+    <h2>Buy / sell simulation</h2>
+    
+      <p class="muted">Fork block 8 &middot; Mock Uniswap V2 pair <code>0xCafac3dD18aC6c6e92c921884f9E4176737C052c</code></p>
+      <table>
+        <tr><th>Scenario</th><th>Wallet</th><th>Buy</th><th>Tokens in</th><th>Buy tax</th><th>Sell out</th><th>Sell tax</th></tr>
+        
+        <tr>
+          <td>medium</td>
+          <td><code>0x00000000...</code></td>
+          <td>ok <span class="muted">(100000000000000000 wei)</span></td>
+          <td>99600698103990321649</td>
+          <td>0.0%</td>
+          <td>execution reverted: Sell not allowed', '0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001053656c6c206e6f7420616c6c6f77656400000000000000000000000000000000')</td>
+          <td>-</td>
+        </tr>
+        
+      </table>
+      <p>Effective buy tax: <strong>0.0%</strong>
+         &middot; Effective sell tax: <strong>inconclusive</strong></p>
+    
+  </div>
+  
+
+  <div class="card">
+    <h2>Security findings (5)</h2>
+    
+    <div class="finding medium">
+      <p><span class="badge medium">medium</span>
+         <strong>Trading can be gated by the owner</strong>
+         <span class="muted">&middot; suspicious &middot; source_code &middot; transfer_restriction</span></p>
+      <p>Trading must be enabled by the owner; until then transfers revert. Evidence: verified source contains the relevant logic; function selector present in bytecode.</p>
+      <p class="muted">Impact: Owner never enables trading or re-disables it to trap buyers.</p>
+      <p class="muted">Mitigation: Confirm trading cannot be disabled after launch.</p>
+      <pre>{
+  "selector": "enableTrading()",
+  "selector_present": true,
+  "source_match": true
+}</pre>
+    </div>
+    
+    <div class="finding low">
+      <p><span class="badge low">low</span>
+         <strong>Ownership is transferable</strong>
+         <span class="muted">&middot; suspicious &middot; source_code &middot; ownership</span></p>
+      <p>Ownership can be handed to any address, including an unverified one. Evidence: verified source contains the relevant logic; function selector present in bytecode.</p>
+      <p class="muted">Impact: Ownership is moved to a contract that re-enables malicious powers.</p>
+      <p class="muted">Mitigation: Track the ownership target.</p>
+      <pre>{
+  "selector": "transferOwnership(address)",
+  "selector_present": true,
+  "source_match": true
+}</pre>
+    </div>
+    
+    <div class="finding critical">
+      <p><span class="badge critical">critical</span>
+         <strong>Token can be bought but cannot be sold</strong>
+         <span class="muted">&middot; confirmed &middot; simulation &middot; honeypot</span></p>
+      <p>An on-fork buy succeeded but every sell attempt reverted. This is the defining honeypot behaviour: buyers are trapped.</p>
+      <p class="muted">Impact: Holders cannot exit; funds are effectively locked.</p>
+      <p class="muted">Mitigation: Do not buy this token.</p>
+      <pre>{
+  "fork_block": 8,
+  "scenarios": 1,
+  "sell_revert": "execution reverted: Sell not allowed\u0027, \u00270x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001053656c6c206e6f7420616c6c6f77656400000000000000000000000000000000\u0027)"
+}</pre>
+    </div>
+    
+    <div class="finding medium">
+      <p><span class="badge medium">medium</span>
+         <strong>Whitelist / privileged exemptions detected</strong>
+         <span class="muted">&middot; suspicious &middot; source_code &middot; whitelist</span></p>
+      <p>Transfer logic references whitelisting or privileged exemptions. Whitelist-only selling is a common honeypot pattern.</p>
+      <p class="muted">Impact: Only privileged wallets may be able to sell.</p>
+      
+      <pre>{
+  "source_hint": true
+}</pre>
+    </div>
+    
+    <div class="finding medium">
+      <p><span class="badge medium">medium</span>
+         <strong>Owner-controlled trading gate</strong>
+         <span class="muted">&middot; suspicious &middot; bytecode &middot; transfer_restriction</span></p>
+      <p>Trading appears gated by an owner-controlled switch. This is often used by legitimate launches (anti-bot) but also by honeypots.</p>
+      
+      
+      <pre>{
+  "selector_enableTrading": true
+}</pre>
+    </div>
+    
+  </div>
+
+  
+  <div class="card">
+    <h2>Unresolved uncertainties</h2>
+    <ul><li>Example: bytecode selectors are heuristic.</li></ul>
+  </div>
+  
+
+  
+  <div class="card">
+    <h2>Simulation limitations</h2>
+    <ul><li>Example generated against a local mock DEX with the Foundry fixtures.</li></ul>
+  </div>
+  
+
+  <div class="card">
+    <h2>Disclaimer</h2>
+    <p class="muted">This report represents automated security analysis and simulation results. It is not a formal smart contract audit or a guarantee of token safety. A low score does not mean the token is safe.</p>
+  </div>
+</div>
+</body>
+</html>

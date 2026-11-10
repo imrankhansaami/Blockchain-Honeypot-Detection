@@ -1,0 +1,47 @@
+# =============================================================================
+# Blockchain Honeypot Detection Tool - Backend dependencies (pinned)
+# Python 3.12+
+# =============================================================================
+
+# --- Web framework / API ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+slowapi==0.1.9
+
+# --- Validation / settings ---
+pydantic==2.10.4
+pydantic-settings==2.7.1
+
+# --- Blockchain ---
+web3==7.16.0
+# eth-account / eth-abi / eth-utils are transitively pinned by web3; do not
+# pin them here or pip's resolver will conflict.
+py-solc-x==2.0.3
+
+# --- Database ---
+SQLAlchemy==2.0.36
+alembic==1.14.0
+psycopg[binary]==3.3.2
+
+# --- Background tasks ---
+celery==5.4.0
+redis==5.2.1
+
+# --- Reporting ---
+Jinja2==3.1.5
+reportlab==4.2.5
+
+# --- HTTP / explorer clients ---
+httpx==0.28.1
+tenacity==9.0.0
+
+# --- Static analysis (optional, invoked as subprocess) ---
+# slither-analyzer==0.10.4   # install separately; see README
+
+# --- Testing ---
+pytest==8.3.4
+pytest-asyncio==0.25.0
+pytest-cov==6.0.0
+hypothesis==6.122.3
+respx==0.22.0

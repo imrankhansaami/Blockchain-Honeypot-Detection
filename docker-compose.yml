@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: honeypot
+      POSTGRES_PASSWORD: honeypot
+      POSTGRES_DB: honeypot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U honeypot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://honeypot:honeypot@db:5432/honeypot
+      USE_CELERY: "false"
+      SIMULATION_ENABLED: "true"
+      ANVIL_BINARY: anvil
+      ENVIRONMENT: development
+      REPORT_OUTPUT_DIR: /app/data/reports
+      # Set your own RPC endpoints / keys at runtime, e.g.:
+      # MAINNET_RPC_URL: https://...
+      # ETHERSCAN_API_KEY: ...
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

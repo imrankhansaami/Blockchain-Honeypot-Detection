@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{ report.title }}</title>
+<style>
+  :root { --bg:#0b0f17; --card:#121826; --fg:#e6edf7; --muted:#8b97ab; --border:#1f2937;
+          --crit:#f43f5e; --high:#fb923c; --med:#facc15; --low:#38bdf8; --info:#64748b; --ok:#34d399; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; line-height:1.5; }
+  .wrap { max-width:960px; margin:0 auto; padding:32px 20px 80px; }
+  h1,h2,h3 { line-height:1.2; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin:16px 0; }
+  .muted { color:var(--muted); }
+  .badge { display:inline-block; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:600; }
+  .crit { background:rgba(244,63,94,.15); color:var(--crit); }
+  .high { background:rgba(251,146,60,.15); color:var(--high); }
+  .medium { background:rgba(250,204,21,.15); color:var(--med); }
+  .low { background:rgba(56,189,248,.15); color:var(--low); }
+  .informational { background:rgba(100,116,139,.2); color:var(--info); }
+  table { width:100%; border-collapse:collapse; }
+  th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); font-size:14px; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  .score { font-size:56px; font-weight:800; }
+  .kv td:first-child { color:var(--muted); width:220px; }
+  code { background:#0e1420; padding:1px 6px; border-radius:6px; font-size:13px; }
+  pre { background:#0e1420; border:1px solid var(--border); border-radius:8px; padding:12px; overflow-x:auto; font-size:12px; }
+  .finding { border-left:3px solid var(--border); padding-left:14px; margin:14px 0; }
+  .finding.critical { border-color:var(--crit); }
+  .finding.high { border-color:var(--high); }
+  .finding.medium { border-color:var(--med); }
+  .finding.low { border-color:var(--low); }
+  .finding.informational { border-color:var(--info); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>{{ report.title }}</h1>
+  <p class="muted">Generated {{ report.generated_at }} &middot; Report ID <code>{{ report.report_id }}</code></p>
+
+  <div class="card">
+    <h2>Overall risk</h2>
+    <div class="score">{{ result.risk.score if result.risk else 'n/a' }}<span class="muted" style="font-size:20px">/100</span></div>
+    <p><span class="badge {{ 'crit' if result.risk and result.risk.score >= 80 else 'high' if result.risk and result.risk.score >= 60 else 'medium' if result.risk and result.risk.score >= 40 else 'low' if result.risk and result.risk.score >= 20 else 'informational' }}">{{ result.risk.classification if result.risk else 'Unknown' }}</span></p>
+    {% if result.risk %}
+    <h3>How the score was calculated</h3>
+    <ul>{% for line in result.risk.explanation %}<li>{{ line }}</li>{% endfor %}</ul>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Token information</h2>
+    <table class="kv">
+      <tr><td>Name</td><td>{{ result.token.metadata.name if result.token else 'n/a' }}</td></tr>
+      <tr><td>Symbol</td><td>{{ result.token.metadata.symbol if result.token else 'n/a' }}</td></tr>
+      <tr><td>Address</td><td><code>{{ result.token_address }}</code></td></tr>
+      <tr><td>Chain</td><td>{{ result.token.chain_name if result.token else result.chain_id }} (chain id {{ result.chain_id }})</td></tr>
+      <tr><td>Decimals</td><td>{{ result.token.metadata.decimals if result.token else 'n/a' }}</td></tr>
+      <tr><td>Total supply</td><td>{{ result.token.metadata.total_supply if result.token else 'n/a' }}</td></tr>
+      <tr><td>Owner</td><td><code>{{ result.token.owner if result.token and result.token.owner else 'none detected' }}</code></td></tr>
+      <tr><td>Contract type</td><td>{{ result.token.contract_type.value if result.token else 'unknown' }}</td></tr>
+      <tr><td>Proxy</td><td>{{ 'Yes - ' + (result.token.proxy.proxy_type or '') if result.token and result.token.proxy.is_proxy else 'No' }}</td></tr>
+      <tr><td>Verified source</td><td>{{ result.token.is_verified if result.token else 'unknown' }}</td></tr>
+      <tr><td>Analysis block</td><td>{{ result.block_number if result.block_number is not none else 'n/a' }}</td></tr>
+      <tr><td>Analysis timestamp</td><td>{{ report.generated_at }}</td></tr>
+    </table>
+  </div>
+
+  {% if result.simulation %}
+  <div class="card">
+    <h2>Buy / sell simulation</h2>
+    {% if result.simulation.performed %}
+      <p class="muted">Fork block {{ result.simulation.fork_block }} &middot; {{ result.simulation.pair.dex if result.simulation.pair else '' }} pair <code>{{ result.simulation.pair.address if result.simulation.pair else '' }}</code></p>
+      <table>
+        <tr><th>Scenario</th><th>Wallet</th><th>Buy</th><th>Tokens in</th><th>Buy tax</th><th>Sell out</th><th>Sell tax</th></tr>
+        {% for s in result.simulation.scenarios %}
+        <tr>
+          <td>{{ s.name }}</td>
+          <td><code>{{ s.wallet[:10] }}...</code></td>
+          <td>{{ 'ok' if s.buy_result.success else 'FAIL' }} <span class="muted">({{ s.buy_amount_wei }} wei)</span></td>
+          <td>{{ s.tokens_received if s.tokens_received is not none else '-' }}</td>
+          <td>{{ (s.buy_tax_bps / 100) ~ '%' if s.buy_tax_bps is not none else '-' }}</td>
+          <td>{{ 'ok' if s.sell_result and s.sell_result.success else (s.sell_result.revert_reason if s.sell_result and s.sell_result.revert_reason else 'FAIL') }}</td>
+          <td>{{ (s.sell_tax_bps / 100) ~ '%' if s.sell_tax_bps is not none else '-' }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      <p>Effective buy tax: <strong>{{ (result.simulation.buy_tax_bps / 100) ~ '%' if result.simulation.buy_tax_bps is not none else 'inconclusive' }}</strong>
+         &middot; Effective sell tax: <strong>{{ (result.simulation.sell_tax_bps / 100) ~ '%' if result.simulation.sell_tax_bps is not none else 'inconclusive' }}</strong></p>
+    {% else %}
+      <p class="muted">{{ result.simulation.reason }}</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h2>Security findings ({{ result.findings | length }})</h2>
+    {% for f in result.findings %}
+    <div class="finding {{ f.severity.value }}">
+      <p><span class="badge {{ f.severity.value if f.severity.value != 'informational' else 'informational' }}">{{ f.severity.value }}</span>
+         <strong>{{ f.title }}</strong>
+         <span class="muted">&middot; {{ f.confidence.value }} &middot; {{ f.source.value }} &middot; {{ f.category.value }}</span></p>
+      <p>{{ f.description }}</p>
+      {% if f.impact %}<p class="muted">Impact: {{ f.impact }}</p>{% endif %}
+      {% if f.recommendation %}<p class="muted">Mitigation: {{ f.recommendation }}</p>{% endif %}
+      {% if f.evidence %}<pre>{{ f.evidence | tojson(indent=2) }}</pre>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if result.risk and result.risk.uncertainties %}
+  <div class="card">
+    <h2>Unresolved uncertainties</h2>
+    <ul>{% for u in result.risk.uncertainties %}<li>{{ u }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if result.simulation and result.simulation.limitations %}
+  <div class="card">
+    <h2>Simulation limitations</h2>
+    <ul>{% for l in result.simulation.limitations %}<li>{{ l }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h2>Disclaimer</h2>
+    <p class="muted">{{ report.disclaimer }}</p>
+  </div>
+</div>
+</body>
+</html>

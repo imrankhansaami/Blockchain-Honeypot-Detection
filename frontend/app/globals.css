@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #0b0f17;
+  color: #e6edf7;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-border bg-panel p-5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-sky-600 text-white hover:bg-sky-500;
+  }
+  .btn-ghost {
+    @apply btn border border-border text-slate-300 hover:bg-white/5;
+  }
+  .input {
+    @apply w-full rounded-lg border border-border bg-[#0e1420] px-3 py-2 text-sm text-slate-100 outline-none focus:border-sky-500;
+  }
+  .label {
+    @apply mb-1 block text-xs font-medium uppercase tracking-wide text-muted;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 6px;
+}
