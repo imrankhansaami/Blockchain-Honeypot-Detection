@@ -1,14 +1,15 @@
 # Blockchain Honeypot Detection & Token Security Analyzer
 
+### 🔗 Live dashboard: <https://imrankhansaami.github.io/Blockchain-Honeypot-Detection/>
+
 [![CI](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/ci.yml/badge.svg)](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/ci.yml)
 [![Deploy dashboard](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/deploy-pages.yml)
 [![Live dashboard](https://img.shields.io/badge/live-dashboard-0ea5e9)](https://imrankhansaami.github.io/Blockchain-Honeypot-Detection/)
 
-> **Live dashboard:** <https://imrankhansaami.github.io/Blockchain-Honeypot-Detection/>
-> The UI is hosted on GitHub Pages. It becomes fully functional once
-> `NEXT_PUBLIC_API_BASE` (a GitHub Actions *repository variable*) points at a
-> deployed backend — see [`render.yaml`](render.yaml) for a one-click Render
-> deploy, and [Live deployment](#live-deployment) below.
+The dashboard UI is hosted on GitHub Pages. It becomes fully functional once
+`NEXT_PUBLIC_API_BASE` (a GitHub Actions *repository variable*) points at a
+deployed backend — see [`render.yaml`](render.yaml) for a one-click Render
+deploy, and [Live deployment](#live-deployment) below.
 
 An automated security-research tool that analyses ERC-20 tokens for honeypot
 behaviour, dangerous owner privileges, transfer restrictions and excessive taxes.
