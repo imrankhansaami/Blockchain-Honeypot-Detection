@@ -51,7 +51,7 @@ export default function ReportsPage() {
                 {rows.map((r) => (
                   <tr key={r.analysis_id} className="border-t border-border/60">
                     <td className="py-2">
-                      <Link href={`/analysis/${r.analysis_id}`} className="font-mono text-xs text-sky-400 hover:underline">
+                      <Link href={`/analysis?id=${r.analysis_id}`} className="font-mono text-xs text-sky-400 hover:underline">
                         {shortAddress(r.token_address, 8)}
                       </Link>
                     </td>

@@ -38,7 +38,7 @@ export default function AnalyzePage() {
     setBusy(true);
     try {
       const created = await api.analyze(chainId, address.trim(), depth);
-      router.push(`/analysis/${created.analysis_id}`);
+      router.push(`/analysis?id=${created.analysis_id}`);
     } catch (err) {
       setError(String(err));
       setBusy(false);

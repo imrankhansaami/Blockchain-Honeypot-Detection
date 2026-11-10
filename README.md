@@ -1,5 +1,15 @@
 # Blockchain Honeypot Detection & Token Security Analyzer
 
+[![CI](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/ci.yml/badge.svg)](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/ci.yml)
+[![Deploy dashboard](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/imrankhansaami/Blockchain-Honeypot-Detection/actions/workflows/deploy-pages.yml)
+[![Live dashboard](https://img.shields.io/badge/live-dashboard-0ea5e9)](https://imrankhansaami.github.io/Blockchain-Honeypot-Detection/)
+
+> **Live dashboard:** <https://imrankhansaami.github.io/Blockchain-Honeypot-Detection/>
+> The UI is hosted on GitHub Pages. It becomes fully functional once
+> `NEXT_PUBLIC_API_BASE` (a GitHub Actions *repository variable*) points at a
+> deployed backend — see [`render.yaml`](render.yaml) for a one-click Render
+> deploy, and [Live deployment](#live-deployment) below.
+
 An automated security-research tool that analyses ERC-20 tokens for honeypot
 behaviour, dangerous owner privileges, transfer restrictions and excessive taxes.
 It performs **real on-chain analysis and real buy/sell simulation on disposable
@@ -24,6 +34,7 @@ scam list.
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [API documentation](#api-documentation)
+- [Live deployment](#live-deployment)
 - [Example analysis](#example-analysis)
 - [Testing](#testing)
 - [Security methodology](#security-methodology)
@@ -281,6 +292,39 @@ Interactive docs are served at `/docs`.
   ]
 }
 ```
+
+## Live deployment
+
+### Dashboard (GitHub Pages)
+
+The dashboard is a statically-exported Next.js app deployed to GitHub Pages by
+[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml):
+
+**https://imrankhansaami.github.io/Blockchain-Honeypot-Detection/**
+
+The UI is fully live. To make its pages show real data, deploy the backend and
+point the dashboard at it.
+
+### Backend (Render blueprint)
+
+[`render.yaml`](render.yaml) deploys the Dockerised FastAPI backend plus a
+managed PostgreSQL database on Render's free tier:
+
+1. In Render: **New → Blueprint**, connect this repository, apply.
+2. Set `MAINNET_RPC_URL` / `BSC_RPC_URL` / `ETHERSCAN_API_KEY` in the service's
+   environment (they are marked `sync: false`, so they are never committed).
+3. Copy the backend URL, then in GitHub: **Settings → Secrets and variables →
+   Actions → Variables → New variable** named `NEXT_PUBLIC_API_BASE` with that
+   URL.
+4. Re-run **Deploy dashboard to GitHub Pages** (or push to `main`).
+
+> Free instances are small; set `SIMULATION_ENABLED=false` for fast static-only
+> analyses. Anvil fork simulation needs an archive-capable RPC.
+
+### Docker (self-host)
+
+`docker compose up --build` runs the full stack locally (Postgres + backend +
+frontend).
 
 ## Testing
 

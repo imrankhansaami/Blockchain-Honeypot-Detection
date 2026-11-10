@@ -1,0 +1,48 @@
+# Render Blueprint — one-click full-stack demo.
+#
+# Deploys the FastAPI backend (with Foundry/Anvil available in the image) and a
+# managed PostgreSQL database. After deploy, copy the backend URL into the
+# GitHub repository variable NEXT_PUBLIC_API_BASE so the Pages dashboard talks
+# to it, then re-run the "Deploy dashboard to GitHub Pages" workflow.
+#
+# Simulation on a free instance can be slow; set SIMULATION_ENABLED=false to
+# serve fast static-only analyses.
+#
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: honeypot-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: honeypot-db
+          property: connectionString
+      - key: SIMULATION_ENABLED
+        value: "true"
+      - key: ANVIL_BINARY
+        value: anvil
+      - key: REPORT_OUTPUT_DIR
+        value: /app/data/reports
+      # Set these in the Render dashboard (never commit them):
+      - key: MAINNET_RPC_URL
+        sync: false
+      - key: BSC_RPC_URL
+        sync: false
+      - key: ETHERSCAN_API_KEY
+        sync: false
+      - key: RPC_ALLOWED_HOSTS
+        sync: false
+
+databases:
+  - name: honeypot-db
+    plan: free
+    databaseName: honeypot
+    user: honeypot

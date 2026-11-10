@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import type { AnalysisResult, Severity } from "@/types";
 import { Card } from "@/components/Card";
@@ -16,15 +16,19 @@ import { cn } from "@/lib/format";
 
 type Tab = "results" | "simulation" | "findings";
 
-export default function AnalysisPage() {
-  const params = useParams<{ id: string }>();
-  const id = params.id;
+function AnalysisView() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") ?? "";
   const [data, setData] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("results");
   const [filter, setFilter] = useState<Severity | "all">("all");
 
   const load = useCallback(async () => {
+    if (!id) {
+      setError("No analysis id provided.");
+      return "failed";
+    }
     try {
       const result = await api.analysis(id);
       setData(result);
@@ -212,5 +216,13 @@ export default function AnalysisPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AnalysisPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-muted">Loading…</p>}>
+      <AnalysisView />
+    </Suspense>
   );
 }

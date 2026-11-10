@@ -88,7 +88,7 @@ export default function OverviewPage() {
                     </td>
                     <td className="py-2 text-muted">{timeAgo(a.created_at)}</td>
                     <td className="py-2 text-right">
-                      <Link href={`/analysis/${a.analysis_id}`} className="text-sky-400 hover:underline">
+                      <Link href={`/analysis?id=${a.analysis_id}`} className="text-sky-400 hover:underline">
                         View
                       </Link>
                     </td>
