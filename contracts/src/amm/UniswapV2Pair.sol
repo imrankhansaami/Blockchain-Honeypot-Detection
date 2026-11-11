@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+// NOTE: This reference implementation is part of the analyzer's contract suite.
 import {UniswapV2ERC20} from "./UniswapV2ERC20.sol";
 import {Math} from "./libraries/Math.sol";
 
