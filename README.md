@@ -70,6 +70,13 @@ a Foundry + Anvil simulation layer, and a Next.js security dashboard.
   never from gas.
 - **Custom static detectors** — block/time restrictions, blacklists, delegatecall,
   unrestricted admin functions, mint logic — with optional Slither integration.
+- **A deep Solidity suite** — beyond the 27 analyzer target fixtures, the repo
+  ships a full Uniswap V2 reference implementation (core + router + libraries),
+  the mock DEX, DeFi primitives (ERC-4626 vault, staking, lending pool, flash
+  loans, escrow, auctions, oracles), extra token standards (ERC-721, ERC-1155,
+  ERC-1363, ERC-3156 flash-mint, soulbound, dividends, rebase), periphery
+  (buyback, liquid locker, vesting, timelock vault, multisig, fee splitter) and
+  an on-chain honeypot-pattern taxonomy — 95 Solidity files.
 - **Explainable risk scoring** — 0–100 score, de-duplicated by category, weighted
   by evidence strength and confidence, with a written explanation.
 - **Structured findings** — severity + confidence (`confirmed` / `suspicious` /
@@ -188,7 +195,7 @@ alembic upgrade head
 git submodule update --init --recursive
 cd contracts
 forge build
-forge test          # 20 tests: unit, fuzz, invariant, adversarial
+forge test          # 84 tests: unit, fuzz, invariant, adversarial, AMM, DeFi
 ```
 
 ### Frontend

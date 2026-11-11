@@ -15,10 +15,14 @@ Implementation plan and status. Phases follow the project brief.
 - [x] Configure Foundry (`foundry.toml`, remappings, `via_ir`)
 - [x] Uniswap-V2-compatible mock DEX (WETH, factory, pair, router with
       fee-on-transfer entry points)
-- [x] 13 token fixtures (standard, honeypot, adjustable tax, excessive sell tax,
-      blacklist, whitelist-only, max-tx, trading switch, mintable, upgradeable
-      UUPS V1/V2, fee-on-transfer, non-standard, no-liquidity)
-- [x] Forge tests: unit, fuzz, invariant, adversarial (20 passing)
+- [x] Full Uniswap V2 reference implementation (core, router, libraries)
+- [x] 27 token fixtures spanning honeypot, tax, blacklist, whitelist, rebase,
+      reflection, cooldown, liquidity-pull, hidden-mint and obfuscated patterns
+- [x] DeFi primitives: ERC-4626 vault, staking, lending pool, flash loans,
+      escrow, auction, oracle, governance, periphery utilities
+- [x] On-chain honeypot-pattern taxonomy (`HoneypotPatterns`, risk registry)
+- [x] Forge tests: unit, fuzz, invariant, adversarial, AMM, DeFi, standards
+      (84 passing across 95 Solidity files)
 
 ## Phase 3 — Blockchain integration ✅
 
