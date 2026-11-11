@@ -1,0 +1,20 @@
+# GitHub Linguist configuration.
+#
+# The Solidity contracts are first-class application source. Vendored Foundry
+# dependencies (also git submodules) and generated/documentation files are
+# excluded from the language statistics so the breakdown reflects real code.
+
+# Vendored dependencies.
+contracts/lib/** linguist-vendored
+
+# Documentation and generated artifacts.
+docs/** linguist-documentation
+*.md linguist-documentation
+docs/examples/** linguist-generated
+frontend/out/** linguist-generated
+frontend/.next/** linguist-generated
+frontend/package-lock.json linguist-generated
+
+# Solidity sources and tests.
+*.sol linguist-language=Solidity
+contracts/**/*.sol linguist-language=Solidity
